@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <h1>Employee Details
+    <h1>
+</head>
+
+<body>
+  <form>
+  <div class="form-group">
+    <label for="empname">EmployeeName</label>
+    <input type="text" name="name" id="empname" class="form-control" placeholder="EmployeeName">
+  </div>
+  <div class="form-group">
+    <label for="designation">Designation</label>
+    <input type="text" name="designation" id="des" class="form-control" placeholder="Designation">
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" name="email1" id="email" class="form-control" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <label for="phone">Phone</label>
+    <input type="number" name="phone1" id="phone" class="form-control" placeholder="Phone number">
+  </div>
+  <div class="form-group">
+    <label for="address">Address:</label>
+    <input type="text" name="address1" id="address" class="form-control" placeholder="Address">
+  </div>
+  <input type="button" class="btn btn-info" id="btnadd" value="Add">
+  <!--<td><button id="btnadd">Add</button></td>-->
+
+ </form>
+  <p id="list"></p>
+  <table>
+    <tr>
+      <td>Id:</td>
+      <td><input type="number" name="id" class="form-control" id="id1"></td>
+    </tr>
+    <tr>
+      <td><button id="btndelete">Delete</button></td>
+      <td><button id="btnedit">Edit</button></td>
+      <td><button id="btnupdate">Update</button></td>
+    </tr>
+  </table>
+ 
+  <script>
+    $("#btnadd").click(function () {
+      $.ajax({
+        type: 'POST',
+        url: "http://localhost:8080/employees",
+        data: JSON.stringify({
+          "empname": document.getElementById("empname").value,
+          "designation": document.getElementById("des").value,
+          "email": document.getElementById("email").value,
+          "phone": document.getElementById("phone").value,
+          "address": document.getElementById("address").value
+        }),
+        error: function (e) {
+          console.log(e);
+
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      alert(empname);
+      clear();
+    });
+
+    function clear() {
+      document.getElementById("empname").value = "";
+      document.getElementById("des").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("phone").value = "";
+      document.getElementById("address").value = "";
+    }
+    $("#btndelete").click(function () {
+      var id = document.getElementById("id1").value;
+      $.ajax({
+        type: 'DELETE',
+        url: "http://localhost:8080/employees/" + id,
+        data: JSON.stringify({
+          //id: document.getElementById("id1").value
+        }),
+        error: function (e) {
+          console.log(e);
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      clear();
+    });
+    var id3;
+    var emp = {};
+    $("#btnedit").click(function () {
+      var id2 = document.getElementById("id1").value;
+      id3 = id2;
+      //      alert("jhfg"+id3);
+
+
+      console.log(id3);
+      $.ajax({
+        type: 'GET',
+        contentType: 'json',
+        url: 'http://localhost:8080/employees/' + id3,
+        dataType: 'json',
+
+        success: function (data) {
+          console.log(data);
+          emp = data;
+          document.getElementById("empname").value = emp.empname;
+          document.getElementById("des").value = emp.designation;
+          document.getElementById("email").value = emp.email;
+          document.getElementById("phone").value = emp.phone;
+          document.getElementById("address").value = emp.address;
+          console.log(emp.empname);
+        },
+        error: function (e) {
+          console.log("Error");
+        },
+        done: function () {
+          console.log("Data Retrived Successfully");
+        }
+      });
+    });
+    $("#btnupdate").click(function () {
+      //   alert(id3);
+      $.ajax({
+        type: 'PUT',
+        contentType: 'json',
+        url: "http://localhost:8080/employees/" + id3,
+        data: JSON.stringify({
+          "empname": document.getElementById("empname").value,
+          "designation": document.getElementById("des").value,
+          "email": document.getElementById("email").value,
+          "phone": document.getElementById("phone").value,
+          "address": document.getElementById("address").value
+
+        }),
+        error: function (e) {
+          console.log(e);
+
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
+      clear();
+
+    });
+  </script>
+</body>
+
+</html>
